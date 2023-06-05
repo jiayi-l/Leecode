@@ -1,0 +1,51 @@
+/*
+给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定股票第 i 天的价格。
+
+你只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+
+返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
+
+输入：[7,1,5,3,6,4]
+输出：5
+*/
+
+class Solution {
+    public int maxProfit(int[] prices) {
+    int profit_m=0; //maximum profit
+    for(int j =0;j<prices.length-1;j++){
+        for(int i = prices.length-1;i>j;i--){
+            int profit=prices[i]-prices[j];
+            if(profit>profit_m){
+                profit_m=profit;
+            }
+        }
+    }
+    return profit_m;
+    }
+}
+
+Better:
+/*
+main logic:
+find minimum buying price and calculate the profit at the same time
+- if the element is not minimum price
+- calculate the profit
+
+max_profit is not always calculated by min_price. ex: [7,3,5,8,1,4].
+However, we would also compare profit. 
+*/
+
+class Solution {
+    public int maxProfit(int[] prices) {
+    int min_P=99999;
+    int profit_m=0; //maximum profit
+    for(int j =0;j<prices.length;j++){
+        if(prices[j]<min_P){
+            min_P=prices[j];
+        }else if(prices[j]-min_P>profit_m){
+            profit_m=prices[j]-min_P;
+        }
+    }
+    return profit_m;
+    }
+}
