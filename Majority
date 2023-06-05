@@ -1,0 +1,57 @@
+/*
+给定一个大小为 n 的数组 nums ，返回其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+
+输入：nums = [3,2,3]
+输出：3
+*/
+
+Mine:
+class Solution {
+    public int majorityElement(int[] nums) {
+        int size = nums.length;
+        if(size<2){
+            return nums[0];
+        }
+        int major = 0; // the index of the element that has appeared > n/2 times
+        int count = 0; // count the number of the elements
+        while(major<size-1){
+            for(int i=0;i<size;i++){
+                if(nums[major]==nums[i]){
+                    count++;
+                }
+            }
+            if(count>size/2){
+                break;
+            }else{
+                count=0;
+                major++;
+            }
+        }
+        return nums[major];
+    }
+}
+
+Better - Boyer–Moore majority vote algorithm：
+/*
+Main logic:
+use each element to cancelled with others. 
+Major elements cannot be all cancelled out, because it has more than n/2, which means the count of majority > sum(count of other elements)
+*/
+
+class Solution {
+public int majorityElement(int[] nums) {
+        int maj = nums[0];
+        int count = 0;
+        for(int i = 0;i < nums.size();++i) {
+            if(count == 0) {
+                maj = nums[i];
+            }
+            if(nums[i] == maj) {
+                count++;
+            } else {
+                count--;
+            }
+        }
+        return maj;
+    }
+};
