@@ -1,0 +1,64 @@
+## 给定一个整数数组 nums，将数组中的元素向右轮转 k 个位置，其中 k 是非负数。
+## for one array nums, rotate all the elements rightward with k units, k is not a negative number.
+
+# input: nums = [1,2,3,4,5,6,7], k = 3
+# output: [5,6,7,1,2,3,4]
+
+#mine:
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int[] temp = new int[nums.length];
+        int size = nums.length;
+        if(size>1){
+            for(int i=0;i<size;i++){
+                if(k>size){
+                    k=k%size;
+                }
+                    if(i+k<size){
+                        temp[i+k]=nums[i];
+                    }else{
+                        temp[i-size+k]=nums[i];
+                    }
+            }
+            for (int j = 0; j < size; j++) { //put all elements in temp into nums
+                nums[j] = temp[j];
+            }
+        }
+    }
+}
+
+#sample
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int n = nums.length;
+        int[] newArr = new int[n];
+        for (int i = 0; i < n; ++i) {
+            newArr[(i + k) % n] = nums[i];
+        }
+        System.arraycopy(newArr, 0, nums, 0, n);
+    }
+}
+
+#sample_2
+# input: nums = [1,2,3,4,5,6,7], k = 3
+# output: [5,6,7,1,2,3,4]
+# The outcome changes the position of the first size-k elements with the last k elements. 
+# The size - k element is always in the first position after the reverse.
+class Solution {
+    public void rotate(int[] nums, int k) { // using the methods created below
+        k %= nums.length;
+        reverse(nums, 0, nums.length - 1); //first reverse all the elements
+        reverse(nums, 0, k - 1); //then reverse k elements ( make the size-k % size element in the original array to the first place.  
+        reverse(nums, k, nums.length - 1); // reverse the rest.
+    }
+
+    public void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start += 1;
+            end -= 1;
+        }
+    }
+}
