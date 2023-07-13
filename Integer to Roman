@@ -1,0 +1,44 @@
+/**
+integer to roman 
+罗马数字包含以下七种字符： I， V， X， L，C，D 和 M。
+
+字符          数值
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+
+ex 2 = II ，12 = XII , which is  X + II 。 27 =  XXVII, which is XX + V + II 。
+
+special case: 4 = IV, which is 5 - 1。9 = IX。
+
+we only have the below special cases here：
+
+I can be on hte left side of V (5) and X (10) ，to represent 4 and 9。
+X can be on the left side of L (50) and C (100) ，to represent 40 and 90。 
+C can be on the left side of D (500) and M (1000)，to represent 400 and 900。
+
+Please transform an interger to a roman number.
+**/
+
+## my solution
+class Solution {
+    public String intToRoman(int num) { // list out all the unique (7 unique symbol) and special cases (which we put small number on the left side)
+        int[] values={1000,900,500,400,100,90,50,40,10,9,5,4,1};
+        String[] reps={"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+        String res = "";
+
+        for(int i = 0;i<values.length;i++){ // we compare the num with the numbers in values from largest to small
+            if(num>=values[i]){ // if num is larger, we put the corresponded roman symbol to the result and abstracted the values from num
+                res+=reps[i];
+                num-=values[i];
+                i-=1; //to avoid we have several identical symbol, we will go through value[i] again. ex: 2000, 300.
+            }
+    
+        }
+    return res;
+    }
+}
