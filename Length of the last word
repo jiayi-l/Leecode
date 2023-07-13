@@ -1,0 +1,14 @@
+/**
+Given a String S with several words, which are seperated by space. Return the length of the last word.
+**/
+
+## my solution
+class Solution {
+    public int lengthOfLastWord(String s) {
+        String[] words = s.split(" "); //split the string's words into the array
+        String lastWord = words[words.length - 1]; //take the last word
+        int l = lastWord.length();
+
+        return l;
+    }
+}
