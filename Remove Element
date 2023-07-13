@@ -1,0 +1,53 @@
+/**
+remove elemet
+
+给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
+不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并 原地 修改输入数组。
+元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
+
+Given an array nums and a value val, remove all the elements that equal to cal. Return the new length of array after remove. 
+No extra array allowed. Do the remove based on the original array. 
+
+input：nums = [0,1,2,2,3,0,4,2], val = 2
+output：5, nums = [0,1,4,0,3]
+**/
+
+#my solution
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int p1=0;
+        int p2=nums.length; //cannot use length-1, since it will ignore the scenario when length =1. 
+        while(p1!=p2){//If p2=length-1 and when length=1, p1 will equal to p2 at the beginning, no validation will happen. 
+            if(nums[p1]==val){
+                if(nums[p2-1]==val){
+                    p2-=1;
+                }else{
+                    nums[p1]=nums[p2-1];
+                    p1+=1;
+                    p2-=1;
+                }
+            }else{
+                p1+=1;
+            }
+        }
+
+        return p1;
+    
+    }
+}
+
+#other
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int n = nums.length;
+        int left = 0; //left is the index of the final array
+        for (int right = 0; right < n; right++) {//right is the index we want to validate
+            if (nums[right] != val) {//if right = val for the first time, left index will not move and stay on the val, 
+                                     //and wait right to find a non-val value, and change left to the non-val value
+                nums[left] = nums[right];
+                left++;
+            }
+        }
+        return left;
+    }
+}
