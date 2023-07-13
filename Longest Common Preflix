@@ -1,0 +1,76 @@
+/**
+return the longest preflix of each string in the array
+input：strs = ["flower","flow","flight"]
+output："fl"
+**/
+
+## my solution - vertical compare
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        String s = "";
+        int l = strs[0].length(); //the legnth of the first string
+        for(int x=0;x<strs.length;x++){ // make the l = the length of the shortest word
+            if(strs[x].length()<l){
+                l=strs[x].length();
+            }
+        }
+        for(int i = 0; i<l;i++){
+            int count = 0; // initial num of the words that have the same initials
+            for(int j=0;j<strs.length;j++){
+                if(strs[j].charAt(i)==strs[0].charAt(i)){
+                    count+=1;
+                }
+            }
+            if(count==strs.length){ // if all the words has the same character at the same position
+                    s+=strs[0].charAt(i);
+                }else{
+                    break;
+                }
+        }
+        return s;
+    }
+}
+
+## horizontal compare
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) {
+            return "";
+        }
+        String prefix = strs[0];
+        int count = strs.length;
+        for (int i = 1; i < count; i++) {
+            prefix = longestCommonPrefix(prefix, strs[i]); //compare the longest preflix so far with the next word in the array
+            if (prefix.length() == 0) {
+                break;
+            }
+        }
+        return prefix;
+    }
+
+    public String longestCommonPrefix(String str1, String str2) {
+        int length = Math.min(str1.length(), str2.length()); // take the shorter one
+        int index = 0;
+        while (index < length && str1.charAt(index) == str2.charAt(index)) {
+            index++; // calculate the length of the preflix
+        }
+        return str1.substring(0, index); //return the preflix
+    }
+}
+
+## other sample
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if(strs.length==0)return "";
+        String s=strs[0]; //make s = the first word
+        for (String string : strs) { // for strings in the array
+            while(!string.startsWith(s)){ // if the string does not strat with s, then shorten the s until the string starts with s.
+                if(s.length()==0){
+                  return "";
+                }
+                s=s.substring(0,s.length()-1); 
+            }
+        }
+        return s;
+    }
+}
