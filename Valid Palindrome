@@ -1,0 +1,71 @@
+/**
+Valid Palindrome
+
+如果在将所有大写字符转换为小写字符、并移除所有非字母数字字符之后，短语正着读和反着读都一样。则可以认为该短语是一个 回文串 。
+字母和数字都属于字母数字字符。
+给你一个字符串 s，如果它是 回文串 ，返回 true ；否则，返回 false 。
+
+input: s = "A man, a plan, a canal: Panama"
+output：true
+explanation："amanaplanacanalpanama" is palindrome。
+*/
+
+##solution
+class Solution {    
+    public boolean isPalindrome(String s) {
+        s=s.toLowerCase(); //make all characters to lower case
+        s=s.replaceAll("[^0-9a-zA-Z]",""); //replace all characters except letter and number to blank
+        int l = s.length();
+
+        /**
+        String temp=""; //another way to remove special char
+        int l = s.length();
+        for(int j=0;j<l;j++){
+            if(s.charAt(j)>='a' && s.charAt(j)<='z' || s.charAt(j)>='0' && s.charAt(j)<='9'){
+                temp+=s.charAt(j);
+            }
+        }
+        s=temp;
+        l = s.length();
+        */
+
+        int c = 0;
+        for(int i=0;i<l;i++){ //compare the first and the last letter
+            if(s.charAt(i)==s.charAt(l-i-1)){
+                c+=1;
+            }
+        }
+        return c==l; 
+        /**
+            if(c==l){ // another way of return
+                return true;
+            }else{
+                return false;
+            }
+        */
+    }
+}
+
+##双指针
+class Solution {
+    public boolean isPalindrome(String s) {
+        int n = s.length();
+        int left = 0, right = n - 1;
+        while (left < right) { //left and right do not met
+            while (left < right && !Character.isLetterOrDigit(s.charAt(left))) { //exclude the char that is not letter or num
+                ++left;
+            }
+            while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+                --right;
+            }
+            if (left < right) { //compare all char, if not the same, false, else continue camparing, until left met with right, which means all char are the same
+                if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+                    return false;
+                }
+                ++left;
+                --right;
+            }
+        }
+        return true;
+    }
+}
