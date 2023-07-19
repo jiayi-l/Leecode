@@ -1,0 +1,55 @@
+/**
+RansomNote
+
+Given two strings：ransomNote and magazine ，check if ransomNote can be constructed of magazine。
+If so,  return true, else return false。
+Each char in magazine can only be used once。
+
+input：ransomNote = "aa", magazine = "ab"
+output：false
+*/
+
+#my solution
+class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        String temp="";
+        int rl=ransomNote.length();
+        int ml=magazine.length();
+        char[] value = magazine.toCharArray();
+        int r=0;
+        int c=0; //count how many char can be found in magazine
+        while(r<rl){
+            for(int m=0;m<ml;m++){
+                if(ransomNote.charAt(r)==value[m]){
+                    value[m]=' ';//if the char is used, make it to empty
+                    c++;
+                    m=0;
+                    break;
+                }
+            }
+            r++;
+        }
+
+        return c==rl;
+    }
+}
+
+#count char
+class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        if (ransomNote.length() > magazine.length()) {
+            return false;
+        }
+        int[] cnt = new int[26]; //represent 26 letters
+        for (char c : magazine.toCharArray()) { //count number of each char
+            cnt[c - 'a']++; //-'a'=index -1
+        }
+        for (char c : ransomNote.toCharArray()) {
+            cnt[c - 'a']--;
+            if(cnt[c - 'a'] < 0) { //if less than 0, means no such char in magazine 
+                return false;
+            }
+        }
+        return true;
+    }
+}
