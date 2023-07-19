@@ -1,0 +1,27 @@
+/**
+Is Subsequence
+
+return if s is t's subsequence
+e.x: "ace" is the subsequence of "abcde" but "aec" is not. 
+
+input：s = "abc", t = "ahbgdc"
+output：true
+*/
+
+#solution
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        int sl=s.length();
+        int tl=t.length();
+        int i=0; //index of t
+        int j=0; //index of s
+        while(i<tl && j<sl){
+                if(s.charAt(j)==t.charAt(i)){
+                    j++;
+                }
+                i++;
+        }
+        return j==sl;
+
+    }
+}
