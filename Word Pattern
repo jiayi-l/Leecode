@@ -1,0 +1,37 @@
+/**
+Word Pattern
+
+input: pattern = "abba", s = "dog cat cat dog"
+output: true
+
+input: pattern = "aaaa", s = "dog cat cat dog"
+output: false
+*/
+
+#solution 
+class Solution {
+    public boolean wordPattern(String pattern, String s) {
+        String[] temp = s.split(" "); //split the string via space
+        Map<Character, String> p2s = new HashMap<Character, String>(); //hash table mapping s to pattern
+        Map<String, Character> s2p = new HashMap<String, Character>(); //hash table mapping pattern to s 
+        int sl=temp.length;
+        int pl=pattern.length();
+ 
+        if(pl!=sl){
+            return false;
+        }else{
+            for(int i=0;i<pl;i++){
+                char x=pattern.charAt(i);
+                String y=temp[i];
+                if( (p2s.containsKey(x) && !p2s.get(x).equals(y))||(s2p.containsKey(y)&& !s2p.get(y).equals(x))){ //compare the key and value in both table, to avoid one value has 2 keys
+                    return false; 
+                }else{
+                    p2s.put(x,y);
+                    s2p.put(y,x);
+                }
+            }
+            return true;
+        }
+        
+    }
+}
