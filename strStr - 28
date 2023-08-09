@@ -1,0 +1,92 @@
+/**
+给你两个字符串 haystack 和 needle ，请你在 haystack 字符串中找出 needle 字符串的第一个匹配项的下标（下标从 0 开始）。如果 needle 不是 haystack 的一部分，则返回  -1 。
+
+input：haystack = "sadbutsad", needle = "sad"
+output：0
+
+input：haystack = "leetcode", needle = "leeto"
+output：-1
+**/
+
+# my_solution
+class Solution {
+    public int strStr(String haystack, String needle) {
+        int n=needle.length();
+        int h=haystack.length();
+        for(int i=0;i<h-n+1;i++){
+            int j=0;
+            while(j<n){
+                if(haystack.charAt(i+j)==needle.charAt(j)){
+                    j++;
+                }else{
+                    break;
+                }
+            }
+            if(j==n){ // if all the characters in needle are in haystack
+                return i;
+            }
+        }
+            return -1;
+        
+    }
+}
+
+
+#KMP 
+class Solution {
+    public int strStr(String haystack, String needle) {
+        int hLen = haystack.length();
+        int nLen = needle.length();
+        if(hLen < nLen || nLen == 0){
+            // if haystack<needle or needle is empty 
+            return -1;
+        }
+        int p = 0;  // haystack index
+        int j = 0;  // needle index
+        int[] next = getNextTable(needle);
+        //System.out.println(Arrays.toString(next));
+        while(p < hLen){
+            if(haystack.charAt(p) == needle.charAt(j)){
+                // if characters are the same, go to the next char
+                p++;
+                j++;
+            }else if(j == 0){
+                // if the first char of needle is not the same as haystack, go find the next char in haystack
+                p++;
+            }else{
+                // p does not move，j = the next char of the longest prefix of neelde[0:j-1]
+                j = next[j-1];
+            }
+            if(j == nLen){
+                return p - nLen;
+            }
+        }
+        return -1;
+    }
+
+    /**
+        the method to get next table 
+     */
+    public int[] getNextTable(String needle) {
+        int len = needle.length();
+        int[] next = new int[len];
+        int k;
+        for (int i = 1; i < len; i++) {
+            k = next[i - 1];
+            char ch = needle.charAt(i);
+            while (ch != needle.charAt(k)) { 
+                if (k == 0) {
+                    k--; //it is to ensure when next[i]=k+1, next[i]==0;
+                    break;
+                } else {
+                    // when s[i]!=s[k]，make k as the index of the length of the shared prefix of s[0:k-1]
+                    k = next[k - 1];
+                }
+            }
+            // if s[i]=s[k], next[i]=k+1
+            next[i] = k + 1;
+        }
+        return next;
+    }
+}
+
