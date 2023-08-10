@@ -1,0 +1,55 @@
+
+
+#mySolution
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> result= new ArrayList<>();
+        int i =0; 
+
+        if(nums.length==1){
+                result.add(Integer.toString(nums[i]));
+        }
+        for(int j=1;j<nums.length;j++){
+            if(nums[j]-nums[j-1]!=1 && j==i+1){
+                result.add(Integer.toString(nums[i]));
+                i=j;
+            }else if(nums[j]-nums[j-1]!=1 && j>i+1){
+                result.add(Integer.toString(nums[i])+"->"+Integer.toString(nums[j-1]));  
+                i=j;
+            }
+            
+            if(i==nums.length-1){
+                result.add(Integer.toString(nums[i]));
+            }else if(i!=nums.length-1&&j==nums.length-1){
+                result.add(Integer.toString(nums[i])+"->"+Integer.toString(nums[j]));
+            }
+        
+        }
+
+        return result;
+    }
+}
+
+#faster
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> ret = new ArrayList<String>();
+        int i = 0;
+        int n = nums.length;
+        while (i < n) {
+            int low = i;
+            i++;
+            while (i < n && nums[i] == nums[i - 1] + 1) { // when the numbers are continuous
+                i++;
+            } // break if the number is not continuous
+            int high = i - 1;
+            StringBuffer temp = new StringBuffer(Integer.toString(nums[low]));
+            if (low < high) {
+                temp.append("->");
+                temp.append(Integer.toString(nums[high]));
+            }
+            ret.add(temp.toString());
+        }
+        return ret;
+    }
+}
