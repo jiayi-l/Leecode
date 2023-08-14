@@ -1,0 +1,35 @@
+/**
+Given a Str s only contains  '('，')'，'{'，'}'，'['，']', check if the string is valid
+
+input：s = "()"
+ouput：true
+
+input：s = "()[]{}"
+output：true
+
+input：s = "(]"
+output：false
+*/
+
+#solution
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> map = new HashMap<Character, Character>();
+        // put all situation in a hashmap
+        map.put(')','(');
+        map.put(']','[');
+        map.put('}','{');
+        // go over the string
+        int sl = s.length();
+        for(int i=0;i<sl;i++){
+            if(!stack.empty() && stack.peek()==map.get(s.charAt(i))){ //if the stack is not empty and the top value is the left side of the symbol 
+                stack.pop(); // remove the value
+            }else{
+                stack.push(s.charAt(i)); //else add the value to the stack
+            }
+        }
+
+    return stack.empty(); // if the stack is not empty, there is some umvalid symbol 
+    }
+}
