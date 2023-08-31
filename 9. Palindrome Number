@@ -1,0 +1,106 @@
+/**
+Given an integer x, return true if x is a palindrome, and false otherwise.
+
+Example 1:
+Input: x = 121
+Output: true
+Explanation: 121 reads as 121 from left to right and from right to left.
+
+Example 2:
+Input: x = -121
+Output: false
+Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+
+Example 3:
+Input: x = 10
+Output: false
+Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
+*/
+
+#my solution
+class Solution {
+    public boolean isPalindrome(int x) {
+        if(x<0){
+            return false;
+        }
+
+        int r = x%10;
+        int d = x/10;
+        List<Integer> remains = new ArrayList<>(); //put values at each digit to the list
+        while(d>0){
+            r = x%10;
+            d = x/10;
+            remains.add(r);
+            x=d;
+        }
+
+        int h=0;
+        int t=remains.size()-1;
+        while(h<=t){ //compare head with the tail value
+            if(remains.get(h)!=remains.get(t)){ 
+                return false;
+            }
+            h++;
+            t--;
+        }
+
+        return true;
+    }
+}
+
+#Approach 2: Reversing the Entire Number
+
+class Solution {
+    public boolean isPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+
+        long reversed = 0;
+        long temp = x;
+
+        while (temp != 0) {
+            int digit = (int) (temp % 10);
+            reversed = reversed * 10 + digit;
+            temp /= 10;
+        }
+
+        return (reversed == x);
+    }
+}
+
+#Approach 2: Reversing Half of the Number
+class Solution {
+    public boolean isPalindrome(int x) {
+        if (x < 0 || (x != 0 && x % 10 == 0)) {
+            return false;
+        }
+
+        int reversed = 0;
+        int original = x;
+
+        while (x > reversed) {
+            reversed = reversed * 10 + x % 10;
+            x /= 10;
+        }
+
+        return (x == reversed) || (x == reversed / 10); //if x has odd numbers of digit, it should use the second validation. 
+    }
+}
+
+#Approach 3: Convert to String
+class Solution {
+    public boolean isPalindrome(int x) {
+        String s = String.valueOf(x); // Convert to String
+        int n = s.length(); // Store the String length to int n
+
+        for (int i=0; i<n/2; i++) {
+            // We check whether the elements at the same distance from
+            // beginning and from ending are same, if not we return false
+            if (s.charAt(i) != s.charAt(n-i-1)) return false;
+        }
+
+        // if no flaws are found we return true
+        return true;
+    }
+}
