@@ -1,0 +1,73 @@
+/**
+Given two binary strings a and b, return their sum as a binary string.
+
+Example 1:
+Input: a = "11", b = "1"
+Output: "100"
+
+Example 2:
+Input: a = "1010", b = "1011"
+Output: "10101"
+*/
+
+#mySolution
+class Solution {
+    public String addBinary(String a, String b) {
+        StringBuilder sum = new StringBuilder();
+        int carry = 0; //add one to carry if the sum value >2
+        int al=a.length();
+        int bl=b.length();
+        int i=0;
+
+        while(i<al || i<bl){
+            if(i>=al){
+                int b_val=Character.getNumericValue(b.charAt(bl-1-i));
+                sum.append((b_val+carry)%2);
+                carry=(b_val+carry)/2;
+            }else if(i>=bl){
+                int a_val=Character.getNumericValue(a.charAt(al-1-i));
+                sum.append((a_val+carry)%2);
+                carry=(a_val+carry)/2;
+            }else{
+                int a_val=Character.getNumericValue(a.charAt(al-1-i));
+                int b_val=Character.getNumericValue(b.charAt(bl-1-i));
+                sum.append((a_val+b_val+carry)%2);
+                carry=(a_val+b_val+carry)/2;
+            }
+            i++;
+        }
+
+        while(carry!=0){
+            sum.append((carry)%2);
+            carry=carry/2;
+        }
+      
+        return sum.reverse().toString();
+    }
+}
+
+#faster & shorter solution
+class Solution 
+{
+  public String addBinary(String a, String b) 
+  {
+    StringBuilder sb = new StringBuilder();
+    int carry = 0;
+    int i = a.length() - 1;
+    int j = b.length() - 1;
+
+    while (i >= 0 || j >= 0 || carry != 0) {// the loop will not stop if carry value is not 0
+      if(i >= 0){
+        carry += a.charAt(i) - '0';//string a's value
+        i--;
+      }
+      if(j >= 0){
+        carry += b.charAt(j) - '0';//add on string b's value
+        j--; 
+      }
+        sb.append(carry % 2);//append the remains
+        carry /= 2;//if the sum is larger than 2, continue adding to sb
+    }
+    return sb.reverse().toString();
+  }
+}
