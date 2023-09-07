@@ -1,3 +1,3 @@
-# Leecode
+# Leetcode
 
-This folder is for Leecode practice notes. 
+This folder is for Leetcode practice notes. 
