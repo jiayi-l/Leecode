@@ -1,0 +1,42 @@
+/**
+Given the root of a binary tree, return the average value of the nodes on each level in the form of an array. Answers within 10-5 of the actual answer will be accepted.
+
+Example 1:
+Input: root = [3,9,20,null,null,15,7]
+Output: [3.00000,14.50000,11.00000]
+Explanation: The average value of nodes on level 0 is 3, on level 1 is 14.5, and on level 2 is 11.
+Hence return [3, 14.5, 11].
+
+Example 2:
+Input: root = [3,9,20,15,7]
+Output: [3.00000,14.50000,11.00000]
+*/
+
+#solution
+class Solution {
+    public List<Double> averageOfLevels(TreeNode root) {
+        Queue<TreeNode> q=new LinkedList<TreeNode>();
+        List<Double> result = new ArrayList<>(); //list to store the average result
+        q.add(root); //first add the root to the queue 
+        while(q.size()!=0){
+            int n=q.size();//how many element we have in each level
+            double tol = 0;
+            for(int i=0;i<n;i++){ 
+                //recurse each level, calculate the avreage of the level.
+                //Also, add the left & right children to the queue for next level calculation. 
+                TreeNode current = q.poll(); //delete the first value 
+                if(current.left!=null){
+                    q.add(current.left);
+                }
+                if(current.right!=null){
+                    q.add(current.right);
+                }
+                tol +=current.val; //add the value to the total
+            }
+            double average = tol/n;
+            result.add(average);
+        }
+        
+        return result;
+    }
+}
