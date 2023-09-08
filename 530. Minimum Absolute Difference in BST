@@ -1,0 +1,49 @@
+/**
+Given the root of a Binary Search Tree (BST), return the minimum absolute difference between the values of any two different nodes in the tree.
+
+Example 1:
+Input: root = [4,2,6,1,3]
+Output: 1
+
+Example 2:
+Input: root = [1,0,48,null,null,12,49]
+Output: 1
+*/
+
+#solution
+class Solution {
+    public int getMinimumDifference(TreeNode root) {
+       if(root == null) return 0;
+       Stack<TreeNode> stack = new Stack<>(); //when it comes to problem of sequence, use stack
+       int res = Integer.MAX_VALUE;
+       TreeNode prev = null, curr = root;
+       while(curr != null || ! stack.isEmpty()) {
+           while(curr != null) {
+               stack.push(curr);//this will add value from root to the smallest node value
+               curr = curr.left;//first it will go to the smallest one
+           }
+           curr = stack.pop();//curr will first equal to the smallest value in the tree
+           //the sequence of the popping is from the smallest to root to the largest
+           if(prev != null) {
+                res = Math.min(res, Math.abs(curr.val - prev.val));
+            }
+            prev = curr;
+            curr = curr.right;//find the value larger than the current one
+       } 
+       return res;
+    }
+}
+
+#recursion
+class Solution {
+       Integer res = Integer.MAX_VALUE, pre = null;
+    public int getMinimumDifference(TreeNode root) {
+        if (root.left != null) getMinimumDifference(root.left);
+        // we can see recursion as the (),when root.left is not null, we are doing the program((((...)))). The inner one is the most left node of the tree.
+        if (pre != null) res = Math.min(res, root.val - pre);
+        pre = root.val;
+        // then we proceed the recursion, the inner ()'s root.right is the leftest node's right, which is null. Then we back to the parent of the smallest node. 
+        if (root.right != null) getMinimumDifference(root.right);
+        return res;
+    }
+}
