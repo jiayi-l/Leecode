@@ -1,0 +1,79 @@
+/**
+You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at nums[i], you can jump to any nums[i + j] where:
+0 <= j <= nums[i] and
+i + j < n
+Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1]. 
+
+Example 1:
+Input: nums = [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+Example 2:
+Input: nums = [2,3,0,1,4]
+Output: 2
+*/
+
+#mySolution
+class Solution {
+    public int jump(int[] nums) {
+        int reach =nums[0];
+        int distance = nums.length-1;
+        int jumps = 1;
+        int max_index = 0;
+        int i=0;
+        int max =reach+i;
+        //set reach to the range the first value can reach; 
+        //then find the largest value in the reachable range;set distance = end-current index;
+        //if reach >=distance; return the number of value we get;
+        //else repeat 1,2 step;
+        if(distance==0){
+            return 0;
+        }
+
+        while(reach+i<distance){
+            jumps++;
+            for(int j=1;j<=reach;j++){
+                if(i+j+nums[i+j]>=distance){
+                    return jumps;
+                }
+
+                if(nums[i+j]+i+j>max){
+                    max=nums[i+j]+i+j;
+                    max_index = i+j;
+                }
+            }
+            if(max>i+reach){
+                i=max_index;
+                reach = nums[i];
+            }else{
+                i=max;
+                reach=nums[i];
+                max=i+reach;
+                jumps--;
+            }
+        }
+
+        return jumps;
+    }
+}
+
+#shorter
+class Solution {
+    public int jump(int[] nums) {
+      //we go through each element in the array
+      //we have a currFarthest which stores the farthest position we can reach so far, and compare each element's range to the farthest range
+      //currEnd will equal to the farthest range of the first element at first; after that if the currend cannot reach the last position; we change the currend to the currfarthest
+      //as we go through each index; if we reach the currend but i is not the last; means current farthest position is not enough; we should add one more jump;
+      int jumps = 0, currEnd = 0, currFarthest = 0;
+      for(int i = 0; i < nums.length - 1; i ++) {
+          currFarthest = Math.max(currFarthest, i + nums[i]);
+          if(i == currEnd) { // means the current range is not enough, need another jump
+              currEnd = currFarthest; //make end to the farthest position we can got so far
+              jumps ++;
+          }
+      }  
+      return jumps;
+    }
+}
