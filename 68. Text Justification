@@ -1,0 +1,103 @@
+/**
+Given an array of strings words and a width maxWidth, format the text such that each line has exactly maxWidth characters and is fully (left and right) justified.
+You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces ' ' when necessary so that each line has exactly maxWidth characters.
+Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line does not divide evenly between words, 
+the empty slots on the left will be assigned more spaces than the slots on the right.
+For the last line of text, it should be left-justified, and no extra space is inserted between words.
+
+Note:
+A word is defined as a character sequence consisting of non-space characters only.
+Each word's length is guaranteed to be greater than 0 and not exceed maxWidth.
+The input array words contains at least one word.
+
+Example 1:
+Input: words = ["This", "is", "an", "example", "of", "text", "justification."], maxWidth = 16
+Output:
+[
+   "This    is    an",
+   "example  of text",
+   "justification.  "
+]
+
+Example 2:
+Input: words = ["What","must","be","acknowledgment","shall","be"], maxWidth = 16
+Output:
+[
+  "What   must   be",
+  "acknowledgment  ",
+  "shall be        "
+]
+Explanation: Note that the last line is "shall be    " instead of "shall     be", because the last line must be left-justified instead of fully-justified.
+Note that the second line is also left-justified because it contains only one word.
+
+Example 3:
+Input: words = ["Science","is","what","we","understand","well","enough","to","explain","to","a","computer.","Art","is","everything","else","we","do"], maxWidth = 20
+Output:
+[
+  "Science  is  what we",
+  "understand      well",
+  "enough to explain to",
+  "a  computer.  Art is",
+  "everything  else  we",
+  "do                  "
+]
+*/
+
+#solution
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        int l =0;
+        int i=0;
+        int numWord =0;
+        List<String> result = new ArrayList<String>();
+        while(i<words.length){
+            //add the words to the line if our line length < max
+            if(l+words[i].length()+numWord<=maxWidth){
+                l+=words[i].length();
+                i++;
+                numWord++;
+            }else{//our line length is maximum
+                StringBuilder str = new StringBuilder();
+                if(numWord>1){
+                    int num_space = maxWidth - l;
+                    int each = num_space/(numWord-1);
+                    int r = num_space%(numWord-1);
+                    for(int j=i-numWord;j<i-1;j++){
+                        str.append(words[j]);
+                        for(int x=0;x<each;x++){
+                            str.append(" ");
+                        }
+                        if(r>0){
+                        //append the extra space if we cannot be divided
+                            str.append(" ");
+                            r--;
+                        }
+                    }
+                    str.append(words[i-1]);
+                    result.add(str.toString());
+                }else if(numWord==1){
+                    str.append(words[i-1]);
+                    while(str.length()<maxWidth){
+                        str.append(" ");
+                    }
+                    result.add(str.toString());
+                }
+                numWord=0;
+                l=0;
+            }
+        }
+        //for the last line of the output
+        StringBuilder str = new StringBuilder();
+        for(int j=i-numWord;j<i-1;j++){
+            str.append(words[j]);
+            str.append(" ");
+        }
+        str.append(words[i-1]);
+        while(str.length()<maxWidth){
+            str.append(" ");
+        }
+        result.add(str.toString());
+
+        return result;
+    }
+}
