@@ -29,26 +29,70 @@ Explanation: In the canonical path, multiple consecutive slashes are replaced by
 #solution
 class Solution {
     public String simplifyPath(String path) {
-        String[] p = path.split("/");
-        StringBuilder result = new StringBuilder();
-        Stack<String> s = new Stack<>();
-        for(int i=0;i<p.length;i++){
-            if(p[i].equals("..")){
-                if(!s.empty()){
-                    s.pop();
-                }   
-            }else if(!p[i].equals("")&&!p[i].equals(".")){
-                s.push(p[i]);   
-            } 
+        Stack<String> dic = new Stack<>();
+        String res = "";
+        for(int i=0;i<path.length();i++){
+            if(path.charAt(i)=='/'){
+                if(res.equals("..")){
+                    if(!dic.empty()){
+                        dic.pop();
+                    }
+                }else if(res.length()!=0 && !res.equals(".")){
+                    dic.push(res);
+                }
+                res = "";
+            }else{
+                res+=path.charAt(i);
+            }
         }
-        if(s.empty()){
+        if(res.length()>0){
+            if(res.equals("..")){
+                if(!dic.empty()){
+                    dic.pop();
+                }
+            }else if(res.length()!=0 && !res.equals(".")){
+                dic.push(res);
+            }
+        }
+        res = "";
+        Stack<String> ans = new Stack<>();
+        if(dic.empty()){
             return "/";
         }
-        while(!s.isEmpty()){
-            result.insert(0,"/"+s.pop());
+        while(!dic.empty()){
+            ans.push(dic.pop());
         }
-        
+        while(!ans.empty()){
+            res+='/';
+            res+=ans.pop();
+        }
+        return res;
+    }
+}
 
+#split method
+class Solution {
+    public String simplifyPath(String path) {
+        Stack<String> dic = new Stack<>();
+        String[] res = path.split("/");
+        for(int i=0;i<res.length;i++){
+            if(res[i].equals("..")){
+                if(!dic.empty()){
+                    dic.pop();
+                }
+            }else if(!res[i].isEmpty() && !res[i].equals(".")){
+                dic.push(res[i]);
+            }
+            System.out.println(dic);
+        }
+        if(dic.empty()){
+            return "/";
+        }
+        StringBuilder result = new StringBuilder();
+        for (String dir : dic) {
+            result.append("/").append(dir);
+        }
         return result.toString();
+
     }
 }
