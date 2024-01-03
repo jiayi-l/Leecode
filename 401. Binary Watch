@@ -1,0 +1,57 @@
+/**
+A binary watch has 4 LEDs on the top to represent the hours (0-11), and 6 LEDs on the bottom to represent the minutes (0-59). 
+Each LED represents a zero or one, with the least significant bit on the right.
+For example, the below binary watch reads "4:51".
+Given an integer turnedOn which represents the number of LEDs that are currently on (ignoring the PM), return all possible times the watch could represent. 
+You may return the answer in any order.
+
+The hour must not contain a leading zero.
+
+For example, "01:00" is not valid. It should be "1:00".
+The minute must consist of two digits and may contain a leading zero.
+
+For example, "10:2" is not valid. It should be "10:02".
+
+Example 1:
+Input: turnedOn = 1
+Output: ["0:01","0:02","0:04","0:08","0:16","0:32","1:00","2:00","4:00","8:00"]
+
+Example 2:
+Input: turnedOn = 9
+Output: []
+*/
+
+#solution
+class Solution {
+    public List<String> readBinaryWatch(int turnedOn) {
+        int[] h = new int[]{8,4,2,1};
+        int[] m = new int[]{32,16,8,4,2,1};
+        ArrayList<String> res = new ArrayList<>();
+        outcome(turnedOn,res,h,m,0,0,0);
+        return res;
+    }
+    public void outcome(int turnedOn, ArrayList<String>res, int[] h, int[] m,int index, int hr, int min){
+        if(hr>11 || min>59){
+            return;
+        }
+        if(turnedOn==0){
+            String time = "";
+            if(min<10){
+                time = hr+":0"+min;
+            }else{
+                time = hr+":"+min;
+            }
+            res.add(time);
+            return;
+        }
+        if(index==h.length+m.length){
+            return;
+        }
+        if(index<h.length){
+            outcome(turnedOn-1,res,h,m,index+1,hr+h[index],min);
+        }else{
+            outcome(turnedOn-1,res,h,m,index+1,hr,min+m[index-h.length]);
+        }
+        outcome(turnedOn,res,h,m,index+1,hr,min);
+    }
+}
