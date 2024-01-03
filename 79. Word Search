@@ -1,0 +1,62 @@
+/**
+Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. 
+The same letter cell may not be used more than once.
+
+Example 1:
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+Output: true
+
+Example 2:
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+Output: true
+
+Example 3:
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+Output: false
+*/
+
+#solution
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        ArrayList<Integer> firstr = new ArrayList<>();
+        ArrayList<Integer> firstc = new ArrayList<>();
+        for(int i=0;i<board.length;i++){
+            for(int j=0;j<board[0].length;j++){
+                if(board[i][j]==word.charAt(0)){
+                    firstr.add(i);
+                    firstc.add(j);
+                }
+            }
+        }
+        for(int i=0;i<firstr.size();i++){
+            if(finder(board,word,0,firstr.get(i),firstc.get(i))){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public boolean finder(char[][] board, String word, int index, int row, int col){
+        if(index==word.length()){
+            return true;
+        }
+        if(row<0 || col<0 || row>=board.length || col>=board[0].length || board[row][col]!=word.charAt(index)){
+            return false;
+        }
+        //store the char at this position
+        char temp = board[row][col];
+        //mark the char we have tranversed 
+        board[row][col]='.';
+        boolean ans = finder(board,word,index+1,row+1,col) ||
+                finder(board,word,index+1,row,col+1) ||
+                finder(board,word,index+1,row-1,col) ||
+                finder(board,word,index+1,row,col-1);
+        //if all directions have been tranversed, 
+        //restore the letter for future use.
+        board[row][col]= temp;
+        return ans;
+    }
+    
+}
