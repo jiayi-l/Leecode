@@ -1,18 +1,44 @@
 /**
-Given a string s, partition s such that every 
-substring
- of the partition is a 
-palindrome
-. Return all possible palindrome partitioning of s.
-
- 
+Given a string s, partition s such that every substring of the partition is a palindrome.
+Return all possible palindrome partitioning of s.
 
 Example 1:
-
 Input: s = "aab"
 Output: [["a","a","b"],["aa","b"]]
-Example 2:
 
+Example 2:
 Input: s = "a"
 Output: [["a"]]
 */
+
+#solution
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        palin(s,res,new ArrayList<>(), 0,0);
+        return res;
+    }
+    public void palin(String s,List<List<String>> res, List<String> p, int start, int end){
+        if(start>s.length()){return;}
+       if(start ==s.length()){
+           res.add(new ArrayList<>(p));
+           return;
+       }
+       for(int i=start;i<s.length();i++){
+           if(isPalin(s,start,i)){
+               p.add(s.substring(start,i+1));
+               palin(s,res,p,i+1,i+1);
+               p.remove(p.size()-1);
+           }
+       }
+    }
+
+    public boolean isPalin(String s, int start, int end){
+        while(start<=end){
+            if(s.charAt(start)!=s.charAt(end)){return false;}
+            start++;
+            end--;
+        }
+        return true;
+    }
+}
