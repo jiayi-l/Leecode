@@ -1,0 +1,89 @@
+/**
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+ 
+Example 1:
+Input: digits = "23"
+Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+Example 2:
+Input: digits = ""
+Output: []
+
+Example 3:
+Input: digits = "2"
+Output: ["a","b","c"]
+*/
+
+#solution
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> res = new ArrayList<>();
+        if(digits.isEmpty()){return res;}
+        res.add("");
+        String[] map = new String[]{"","abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        char[] dig = digits.toCharArray();
+        for(char d : dig){
+            String temp = map[Character.getNumericValue(d)-1];
+            char[] e = temp.toCharArray();
+            int l = res.size();
+            for(int i=0;i<l;i++){
+                String cur = res.get(0);
+                for(char element :e){
+                    String curr = cur+element;
+                    res.add(curr);
+                }
+                res.remove(0);
+            }
+        }
+        return res;
+        
+    }
+}
+
+#recursion
+class Solution {
+    private Map<Character, String> digitToLetters = new HashMap<>();
+    private List<String> resultList = new ArrayList<>();
+
+    public List<String> letterCombinations(String digits) {
+        if (digits == null || digits.length() == 0) {
+            return resultList;
+        }
+
+        digitToLetters.put('2', "abc");
+        digitToLetters.put('3', "def");
+        digitToLetters.put('4', "ghi");
+        digitToLetters.put('5', "jkl");
+        digitToLetters.put('6', "mno");
+        digitToLetters.put('7', "pqrs");
+        digitToLetters.put('8', "tuv");
+        digitToLetters.put('9', "wxyz");
+
+        generateCombinations(digits, 0, new StringBuilder());
+
+        return resultList;
+
+
+    }
+
+
+    private void generateCombinations(String digits, int currentIndex, StringBuilder currentCombination) {
+        if (currentIndex == digits.length()) {
+            resultList.add(currentCombination.toString());
+            return;
+        }
+
+        char currentDigit = digits.charAt(currentIndex);
+        String letterOptions = digitToLetters.get(currentDigit);
+
+        if (letterOptions != null) {
+            for (int i = 0; i < letterOptions.length(); i++) {
+                char letter = letterOptions.charAt(i);
+                currentCombination.append(letter);
+                generateCombinations(digits, currentIndex + 1, currentCombination);
+                currentCombination.deleteCharAt(currentCombination.length() - 1);
+            }
+        }
+    }
+}
