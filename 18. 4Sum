@@ -1,0 +1,163 @@
+/**
+Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
+0 <= a, b, c, d < n
+a, b, c, and d are distinct.
+nums[a] + nums[b] + nums[c] + nums[d] == target
+You may return the answer in any order.
+
+Example 1:
+Input: nums = [1,0,-1,0,-2,2], target = 0
+Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+
+Example 2:
+Input: nums = [2,2,2,2,2], target = 8
+Output: [[2,2,2,2]]
+*/
+
+#recursion
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        subset(nums,target,new ArrayList<Integer>(),res,0);
+        return res;
+    }
+    public void subset(int[] nums, int target, List<Integer> curr, List<List<Integer>> res, int ind){
+        if(curr.size()==4 && target==0){
+            Collections.sort(curr);
+            if(!res.contains(curr)){
+               res.add(new ArrayList<>(curr)); 
+            }
+            return;
+        }
+        if(ind>=nums.length || (curr.size()==4 && target!=0)){return;}
+        
+        if(nums[ind]<=target || target<=0){
+            curr.add(nums[ind]);
+            subset(nums,target-nums[ind],curr,res,ind+1);
+            curr.remove(Integer.valueOf(nums[ind]));
+            subset(nums,target,curr,res,ind+1);  
+        }
+    }
+}
+
+#2 pointers
+class Solution {
+    public static List<List<Integer>> fourSum(int[] nums, int target) {
+      List<List<Integer>> res = new ArrayList<>();
+      Arrays.sort(nums);
+      long sum =0;
+      for(int i=0;i<nums.length-3;i++){
+         List<Integer> curr  = new ArrayList<>();
+         sum=nums[i];
+         for(int j=nums.length-1;j>i+2;j--) {
+            sum += nums[j];
+            int p1 = i + 1;
+            int p2 = j - 1;
+            while (p1 < p2) {
+               int temp = nums[p1] + nums[p2];
+               sum += temp;
+               if (sum > target) {
+                  p2--;
+               } else if (sum < target) {
+                  p1++;
+               } else {
+                  curr.add(nums[i]);
+                  curr.add(nums[p1]);
+                  curr.add(nums[p2]);
+                  curr.add(nums[j]);
+                  if(!res.contains(curr)){
+                      res.add(new ArrayList<>(curr));
+                  }
+                  curr = new ArrayList<>();
+                  p1++;
+                  p2--;
+               }
+               sum -= temp;
+            }
+            sum-=nums[j];
+         }
+      }
+      return res;
+   }
+}
+
+#modified 2 pointers
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums); 
+        List<List<Integer>> list = new ArrayList<>();
+        for(int i = 0; i < nums.length - 3; i++){
+            if(i > 0 && nums[i] == nums[i - 1]) continue;
+            for(int j = i + 1; j < nums.length - 2; j++){
+                if(j > i + 1 && nums[j] == nums[j - 1]) continue;
+                twoSum(i, j, (long)target, nums, list);
+            }
+        }
+        return list;
+    }
+    public void twoSum(int i, int j, long target, int[] nums, List<List<Integer>> list){
+        long modifiedTarget = target - (nums[i] + nums[j]);
+        int left = j + 1, right = nums.length - 1;
+        while(left < right){
+            int sum = nums[left] + nums[right];
+            if(sum == modifiedTarget){
+                list.add(Arrays.asList(
+                    nums[i], nums[j], nums[left], nums[right]));
+                left++; right--;
+                while(left < right && nums[left] == nums[left - 1]) left++;
+                while(left < right && nums[right] == nums[right + 1]) right--;
+            }
+            else if(sum > modifiedTarget) right--;
+            else left++;
+        }
+    }
+}
+
+#general k-sum
+public class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums); // Sort the input array in ascending order.
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        helper(nums, (long) target, 0, result, temp, 4); // Use long data type for target.
+        return result; // Return the result list containing unique quadruplets.
+    }
+
+    private void helper(int[] nums, long target, int start, List<List<Integer>> result, List<Integer> temp, int numNeed) {
+        if (numNeed != 2) {
+            for (int i = start; i < nums.length - numNeed + 1; i++) {
+                if (i > start && nums[i] == nums[i - 1]) {
+                    continue; // Skip duplicates to avoid duplicate combinations.
+                }
+                temp.add(nums[i]); // Add the current number to the combination.
+                helper(nums, target - nums[i], i + 1, result, temp, numNeed - 1); // Recursively find the next number(s).
+                temp.remove(temp.size() - 1); // Remove the last number to backtrack.
+            }
+            return;
+        }
+
+        // If we need exactly 2 numbers, perform a two-pointer approach.
+        int l = start;
+        int r = nums.length - 1;
+        while (l < r) {
+            long total = (long) nums[l] + nums[r];
+            if (total < target) {
+                l++;
+            } else if (total > target) {
+                r--;
+            } else {
+                temp.add(nums[l]); // Add the left number to the combination.
+                temp.add(nums[r]); // Add the right number to the combination.
+                result.add(new ArrayList<>(temp)); // Store the valid quadruplet in the result list.
+                temp.remove(temp.size() - 1); // Remove the right number to backtrack.
+                temp.remove(temp.size() - 1); // Remove the left number to backtrack.
+                l++;
+                r--;
+                while (l < r && nums[l] == nums[l - 1]) {
+                    l++; // Skip duplicates on the left.
+                }
+            }
+        }
+    }
+}
