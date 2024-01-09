@@ -1,0 +1,44 @@
+/**
+Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.
+Note: You must not use any built-in BigInteger library or convert the inputs to integer directly.
+
+Example 1:
+Input: num1 = "2", num2 = "3"
+Output: "6"
+
+Example 2:
+Input: num1 = "123", num2 = "456"
+Output: "56088"
+*/
+
+#solution
+class Solution {
+    public String multiply(String num1, String num2) {
+        int[]res = new int[num1.length()+num2.length()];
+        int t = res.length-1;
+        int f = t-1;
+        if(num1.equals("0") || num2.equals("0")){return "0";}
+        for(int i=num1.length()-1;i>=0;i--){
+            int curr1 = num1.charAt(i)-'0';
+            for(int j=num2.length()-1;j>=0;j--){
+                int curr2 = num2.charAt(j)-'0';
+                t = i+j+1;
+                f = t-1;
+                int m = curr1*curr2+res[t];
+                res[t]=m%10;
+                res[f]+=m/10;
+            }
+        }
+
+        int ind = 0;
+        while(ind < res.length && res[ind] == 0){
+            ind++;
+        }
+
+        String s = "";
+        for(int i=ind;i<res.length;i++){
+            s+=res[i];
+        }
+        return s;
+    }
+}
