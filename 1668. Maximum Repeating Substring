@@ -1,0 +1,61 @@
+/**
+For a string sequence, a string word is k-repeating if word concatenated k times is a substring of sequence. 
+The word's maximum k-repeating value is the highest value k where word is k-repeating in sequence. If word is not a substring of sequence, word's maximum k-repeating value is 0.
+Given strings sequence and word, return the maximum k-repeating value of word in sequence.
+
+Example 1:
+Input: sequence = "ababc", word = "ab"
+Output: 2
+Explanation: "abab" is a substring in "ababc".
+
+Example 2:
+Input: sequence = "ababc", word = "ba"
+Output: 1
+Explanation: "ba" is a substring in "ababc". "baba" is not a substring in "ababc".
+
+Example 3:
+Input: sequence = "ababc", word = "ac"
+Output: 0
+Explanation: "ac" is not a substring in "ababc". 
+*/
+
+#solution
+class Solution {
+    public int maxRepeating(String sequence, String word) {
+        int l = word.length();
+        int ind = 0;
+        int slow_pointer = 0;
+        int ct =0;
+        int total =0;
+        if(l>sequence.length()){
+            return 0;
+        }
+        while(ind<=sequence.length()-l){
+            String curr = sequence.substring(ind,ind+l);
+            if(curr.equals(word)){
+                ct++;
+                slow_pointer = ind+1;
+                ind+=l;
+            }else{
+                ct=0;
+                ind = slow_pointer;
+                slow_pointer ++;
+            }
+            total = Math.max(ct, total);
+        }
+        return total;
+    }
+}
+
+#clean
+class Solution {
+    public int maxRepeating(String sequence, String word) {
+        int count = 0;
+        String add = word;
+        while(sequence.contains(word) == true) {
+            count++;
+            word += add;
+        }
+        return count;
+    }
+}
