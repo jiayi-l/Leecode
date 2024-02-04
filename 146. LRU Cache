@@ -1,0 +1,102 @@
+/**
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+
+Example 1:
+Input
+["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
+Output
+[null, null, null, 1, null, -1, null, -1, 3, 4]
+
+Explanation
+LRUCache lRUCache = new LRUCache(2);
+lRUCache.put(1, 1); // cache is {1=1}
+lRUCache.put(2, 2); // cache is {1=1, 2=2}
+lRUCache.get(1);    // return 1
+lRUCache.put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}
+lRUCache.get(2);    // returns -1 (not found)
+lRUCache.put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4, 3=3}
+lRUCache.get(1);    // return -1 (not found)
+lRUCache.get(3);    // return 3
+lRUCache.get(4);    // return 4
+*/
+
+#solution
+class LRUCache {
+    class Node {
+        public int key;
+        public int val;
+        public Node next;
+        public Node prev;
+
+        public Node(int key, int val) {
+            this.key = key;
+            this.val = val;
+            next = null;
+            prev = null;
+        }
+    }
+    private void del(Node n){
+        Node p = n.prev;
+        Node nex = n.next;
+        p.next = nex;
+        nex.prev = p;
+    }
+
+    private void add(Node n){
+        Node tmp = h.next;
+        h.next = n;
+        n.prev = h;
+        n.next = tmp;
+        tmp.prev = n;
+    }
+
+    HashMap<Integer,Node> mp;
+    int c;
+    Node h;
+    Node t;
+
+    public LRUCache(int capacity) {
+        c = capacity;
+        mp = new HashMap<>();
+        h = new Node(-1,-1);
+        t = new Node(-1,-1);
+        h.next = t;
+        t.prev = h;
+    }
+    
+    public int get(int key) {
+        int v = -1;
+        if(mp.containsKey(key)){
+            Node curr = mp.get(key);
+            v = curr.val;
+            del(curr);
+            add(curr);
+        }
+        return v;
+    }
+    
+    public void put(int key, int value) {
+        if(mp.containsKey(key)){
+            Node curr = mp.get(key);
+            curr.val = value;
+            del(curr);
+            add(curr);
+        }else{
+            if(mp.size()>=c){
+                Node tmp = t.prev;
+                del(tmp);
+                mp.remove(tmp.key);
+            }
+            Node n = new Node(key,value);
+            add(n);
+            mp.put(key,n);
+        }
+    }
+}
