@@ -1,0 +1,32 @@
+/**
+Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree. 
+
+Example 1:
+Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+Output: [3,9,20,null,null,15,7]
+
+Example 2:
+Input: preorder = [-1], inorder = [-1]
+Output: [-1]
+*/
+
+#solution
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        Map<Integer,Integer> mp = new HashMap<>();
+        for(int i=0;i<inorder.length;i++){
+            mp.put(inorder[i],i);
+        }
+        return build(preorder,mp,0, 0, inorder.length-1, inorder);
+    }
+    public TreeNode build(int[] preorder, Map<Integer,Integer> mp, int pre, int start, int end, int[] inorder){
+      if(pre>=preorder.length || start>end){return null;}
+      TreeNode root = new TreeNode(preorder[pre]);
+      int rt = mp.get(preorder[pre]);
+      root.left=build(preorder,mp,pre+1,start,rt-1,inorder);
+      root.right=build(preorder,mp,pre+rt-start+1,rt+1,end,inorder);
+      return root;
+
+    }
+
+}
