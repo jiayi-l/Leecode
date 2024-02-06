@@ -1,0 +1,51 @@
+/**
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] 
+indicates that you must take course bi first if you want to take course ai.
+For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+Return true if you can finish all courses. Otherwise, return false.
+ 
+Example 1:
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0. So it is possible.
+
+Example 2:
+Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+*/
+
+#solution
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] numPre = new int[numCourses];
+        Map<Integer,List<Integer>> mp = new HashMap<>();
+        Queue<Integer> q = new LinkedList<>();
+        for(int[] pair:prerequisites){
+            numPre[pair[0]]++;
+            List<Integer> cur = mp.getOrDefault(pair[1],new ArrayList<>());
+            cur.add(pair[0]);
+            mp.put(pair[1],cur);
+        }
+        for(int i=0;i<numCourses;i++){
+            if(numPre[i]==0){
+                q.add(i);
+            }
+        }
+
+        while(!q.isEmpty()){
+            int c = q.poll();
+            List<Integer> depend = mp.getOrDefault(c, new ArrayList<>());
+            for(int d:depend){
+                numPre[d]--;
+                if(numPre[d]==0){q.add(d);}
+            }
+        }
+        for(int i=0;i<numCourses;i++){
+            if(numPre[i]>0){return false;}
+        }
+        return true;
+    }
+}
