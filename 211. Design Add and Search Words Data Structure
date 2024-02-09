@@ -1,0 +1,81 @@
+/**
+Design a data structure that supports adding new words and finding if a string matches any previously added string.
+
+Implement the WordDictionary class:
+WordDictionary() Initializes the object.
+void addWord(word) Adds word to the data structure, it can be matched later.
+bool search(word) Returns true if there is any string in the data structure that matches word or false otherwise. word may contain dots '.' where dots can be matched with any letter.
+ 
+Example:
+Input
+["WordDictionary","addWord","addWord","addWord","search","search","search","search"]
+[[],["bad"],["dad"],["mad"],["pad"],["bad"],[".ad"],["b.."]]
+Output
+[null,null,null,null,false,true,true,true]
+
+Explanation
+WordDictionary wordDictionary = new WordDictionary();
+wordDictionary.addWord("bad");
+wordDictionary.addWord("dad");
+wordDictionary.addWord("mad");
+wordDictionary.search("pad"); // return False
+wordDictionary.search("bad"); // return True
+wordDictionary.search(".ad"); // return True
+wordDictionary.search("b.."); // return True
+*/
+
+#solution
+class TrieNode{
+    Map<Character,TrieNode> child;
+    boolean isEnd;
+
+    public TrieNode(){
+        child = new HashMap<>();
+        isEnd = false;
+    }
+}
+class WordDictionary {
+    TrieNode root;
+
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+    
+    public void addWord(String word) {
+        TrieNode curr = root;
+        char[] words = word.toCharArray();
+        for(char w: words){
+            if(!curr.child.containsKey(w)){
+                TrieNode n = new TrieNode();
+                curr.child.put(w,n);
+            }
+            curr = curr.child.get(w);
+        }
+        curr.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        TrieNode curr = root;
+        return compare(curr,word.toCharArray(),0);
+    }
+    
+    private boolean compare(TrieNode t, char[] w, int i){
+        if(i==w.length){
+            return t.isEnd;
+        }
+        if(w[i]=='.'){
+            for(Map.Entry<Character,TrieNode> et:t.child.entrySet()){
+                TrieNode c = et.getValue();
+                if(compare(c,w,i+1)){return true;}
+            }
+        }else{
+            if(!t.child.containsKey(w[i])){
+                return false;
+            }
+            TrieNode n = t.child.get(w[i]);
+            if(compare(n,w,i+1)){return true;}
+        }
+        return false;
+    }
+   
+}
