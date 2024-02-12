@@ -1,0 +1,68 @@
+/**
+There are n cities. Some of them are connected, while some are not. If city a is connected directly with city b, and city b is connected directly with city c, then city a is connected indirectly with city c.
+A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are directly connected, and isConnected[i][j] = 0 otherwise.
+Return the total number of provinces.
+
+Example 1:
+Input: isConnected = [[1,1,0],[1,1,0],[0,0,1]]
+Output: 2
+
+Example 2:
+Input: isConnected = [[1,0,0],[0,1,0],[0,0,1]]
+Output: 3
+*/
+
+#BFS
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int p = 0;
+        for(int i=0;i<isConnected.length;i++){
+            if(isConnected[i][i]==1){
+                p++;
+                findP(isConnected,i);
+            }
+        }
+        return p;
+    }
+    public void findP(int[][] isConnected,int r){
+        Queue<Integer> q = new LinkedList<>();
+        q.add(r);
+        while(!q.isEmpty()){
+            r = q.poll();
+            isConnected[r][r]=0;
+            for(int i=0;i<isConnected[r].length;i++){
+                if(isConnected[r][i]==1){
+                    q.add(i);
+                    isConnected[r][i]=0;
+                    isConnected[i][r]=0;
+                }
+            }
+        }
+
+    }
+}
+
+#DFS
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int provinces=0;
+        for(int j=0;j<isConnected[0].length;j++){
+            provinces += dfs(isConnected, j);
+        }
+        return provinces;
+    }
+
+    private int dfs(int[][] isConnected, int node){
+        if(isConnected[node][node]==0)
+            return 0;
+
+        isConnected[node][node]=0;
+        for(int j=0;j<isConnected[node].length;j++){
+            if(isConnected[node][j]==1){
+                dfs(isConnected,j);
+            }
+        }
+        return 1;
+    }
+}
