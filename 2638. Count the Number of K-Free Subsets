@@ -1,0 +1,56 @@
+/**
+You are given an integer array nums, which contains distinct elements and an integer k.
+A subset is called a k-Free subset if it contains no two elements with an absolute difference equal to k. Notice that the empty set is a k-Free subset.
+Return the number of k-Free subsets of nums.
+A subset of an array is a selection of elements (possibly none) of the array.
+
+Example 1:
+Input: nums = [5,4,6], k = 1
+Output: 5
+Explanation: There are 5 valid subsets: {}, {5}, {4}, {6} and {4, 6}.
+
+Example 2:
+Input: nums = [2,3,5,8], k = 5
+Output: 12
+Explanation: There are 12 valid subsets: {}, {2}, {3}, {5}, {8}, {2, 3}, {2, 3, 5}, {2, 5}, {2, 5, 8}, {2, 8}, {3, 5} and {5, 8}.
+
+Example 3:
+Input: nums = [10,5,9,11], k = 20
+Output: 16
+Explanation: All subsets are valid. Since the total count of subsets is 24 = 16, so the answer is 16. 
+*/
+
+#solution
+class Solution {
+    public long countTheNumOfKFreeSubsets(int[] nums, int k) {
+        Arrays.sort(nums);
+        long res =1;
+        Map<Integer,List<Integer>> mp = new HashMap<>();
+        for(int i:nums){
+            List<Integer> cur = mp.getOrDefault(i%k,new ArrayList<>());
+            cur.add(i);
+            mp.put(i%k,cur);
+        }
+        for(List<Integer> x:mp.values()){
+            res*=count(x,k);
+        }
+        return res;
+    }
+
+    public long count(List<Integer> x,int k){
+        long[] take = new long[x.size()];
+        long[] notake = new long[x.size()];
+        take[0]=1;
+        notake[0]=1;
+
+        for(int i=1;i<x.size();i++){
+            if(x.get(i)==x.get(i-1)+k){
+                take[i]=notake[i-1];
+            }else{
+                take[i]=take[i-1]+notake[i-1]; 
+            }
+            notake[i]=take[i-1]+notake[i-1];
+        }
+        return take[x.size()-1]+notake[x.size()-1];
+    }
+}
